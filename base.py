@@ -24,7 +24,7 @@ class Base:
         self.mode = "normal"
 
         # color of base
-        self.color = (100, 100, 100)
+        self.color = (50,50,50)
 
     def move(self):
         if self.shift:
@@ -40,7 +40,7 @@ class Base:
 
         # update mode
         random_num = random.randint(0, 50)
-        if random_num>5 and random_num<10:
+        if random_num > 5 and random_num < 10:
             self.mode = "jump"
             self.color = (0, 0, 255)
         elif random_num < 5:
@@ -48,8 +48,7 @@ class Base:
             self.color = (255, 0, 0)
         else:
             self.mode = "normal"
-            self.color = (100, 100, 100)
+            self.color = (50,50,50)
 
     def show(self):
-        draw.rect(self.scr, self.color, Rect(
-            self.x, self.y, self.w, self.h))
+        draw.rect(self.scr, self.color, Rect(self.x, self.y, self.w, self.h))

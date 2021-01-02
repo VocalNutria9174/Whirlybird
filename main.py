@@ -1,6 +1,8 @@
 import pygame
 from bird import Bird
 from base import Base
+from enemy import Enemy
+import random
 
 # initilaize
 pygame.init()
@@ -20,12 +22,16 @@ pygame.display.set_caption("Whirlybird")
 # clock
 clock = pygame.time.Clock()
 
+# bg image
+bgImg = pygame.image.load("img/bg.png")
+bgImg = pygame.transform.scale(bgImg, (WIDTH, HEIGHT))
+
 # display msg
 
 
 def msg(message, x, y, size):
     font = pygame.font.SysFont("Times new Roman", size)
-    text = font.render(message, True, (100, 100, 100))
+    text = font.render(message, True, (0,0,0))
     scr.blit(text, (x, y))
 
 # gameloop
@@ -41,6 +47,11 @@ def gameloop():
     bird = Bird(scr, WIDTH, HEIGHT, 25)
     bird.up()
     move_num = 0
+
+    # enemy
+    enemy = []
+    for i in range(random.randrange(1, 4)):
+        enemy.append(Enemy(scr, WIDTH, HEIGHT))
 
     # base
     base = []
@@ -62,7 +73,8 @@ def gameloop():
             if event.type == pygame.KEYUP:
                 move_num = 0
 
-        scr.fill((255, 255, 255))
+        # scr.fill((255, 255, 255))
+        scr.blit(bgImg, (0, 0))
 
         # bird
         bird.update()
@@ -92,6 +104,22 @@ def gameloop():
                     print("Gameover")
                 else:
                     bird.up()
+
+        # enemy
+        for i in enemy:
+            i.show()
+            i.move()
+
+            if i.y > HEIGHT:
+                i.update_pos()
+
+            # collision
+            if i.collide(bird):
+                print("Gameover")
+
+            # move downward
+            if bird.y <= 100:
+                i.y += 5
 
         # score
         msg(f"Score:{Filter_score}", 30, 0, 30)

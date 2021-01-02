@@ -1,4 +1,4 @@
-from pygame import draw, Rect
+from pygame import draw, Rect, image, transform
 
 
 class Bird:
@@ -14,11 +14,15 @@ class Bird:
         self.vy = 0
         self.gravity = 0.3
 
+        # imaage
+        self.img = image.load("img/android.png")
+        self.img = transform.scale(self.img, (self.r, self.r))
+
     def update(self):
         self.y += self.vy
         self.vy += self.gravity
 
-    def up(self,num=10):
+    def up(self, num=10):
         self.vy = -num
 
     def move(self, num):
@@ -40,4 +44,5 @@ class Bird:
 
     def show(self):
         self.y = self.constrain(self.y, 100, self.height-self.r)
-        draw.rect(self.scr, (100,100,100), Rect(self.x, self.y, self.r, self.r))
+        # draw.rect(self.scr, (100,100,100), Rect(self.x, self.y, self.r, self.r))
+        self.scr.blit(self.img, (self.x, self.y))
