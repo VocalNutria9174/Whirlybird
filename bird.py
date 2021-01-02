@@ -18,8 +18,8 @@ class Bird:
         self.y += self.vy
         self.vy += self.gravity
 
-    def up(self):
-        self.vy = -10
+    def up(self,num=10):
+        self.vy = -num
 
     def move(self, num):
         self.x += num

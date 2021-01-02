@@ -21,10 +21,12 @@ pygame.display.set_caption("Whirlybird")
 clock = pygame.time.Clock()
 
 # display msg
-def msg(message,x,y,size):
-    font = pygame.font.SysFont("Times new Roman",size)
-    text = font.render(message,True,(100,100,100))
-    scr.blit(text,(x,y))
+
+
+def msg(message, x, y, size):
+    font = pygame.font.SysFont("Times new Roman", size)
+    text = font.render(message, True, (100, 100, 100))
+    scr.blit(text, (x, y))
 
 # gameloop
 
@@ -72,8 +74,8 @@ def gameloop():
             i.show()
 
             # move base
-            if bird.y<=100:
-                SCORE+=1
+            if bird.y <= 100:
+                SCORE += 1
                 Filter_score = SCORE//10
                 i.move()
 
@@ -82,12 +84,17 @@ def gameloop():
                 i.update_pos()
 
             # collision
-            if i.collide(bird):
-                bird.up()
+            collision = i.collide(bird)
+            if collision:
+                if i.mode == "jump":
+                    bird.up(20)
+                elif i.mode == "danger":
+                    print("Gameover")
+                else:
+                    bird.up()
 
-        
         # score
-        msg(f"Score:{Filter_score}",30,0,30)
+        msg(f"Score:{Filter_score}", 30, 0, 30)
 
         # update sceen
         clock.tick(FPS)
