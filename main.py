@@ -2,6 +2,7 @@ import pygame
 from bird import Bird
 from base import Base
 from enemy import Enemy
+from time import sleep
 import random
 
 # initilaize
@@ -18,6 +19,7 @@ Filter_score = 0
 # screeen
 scr = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Whirlybird")
+pygame.display.set_icon(pygame.image.load("img/android.png"))
 
 # clock
 clock = pygame.time.Clock()
@@ -31,8 +33,30 @@ bgImg = pygame.transform.scale(bgImg, (WIDTH, HEIGHT))
 
 def msg(message, x, y, size):
     font = pygame.font.SysFont("Times new Roman", size)
-    text = font.render(message, True, (0,0,0))
+    text = font.render(message, True, (198, 234, 167))
     scr.blit(text, (x, y))
+
+
+def gameOver():
+    global GAME
+    scr.fill((255, 255, 255))
+    msg("GameOver", WIDTH/2-60, HEIGHT/2, 30)
+    pygame.display.update()
+    GAME = False
+    sleep(2)
+
+# HIGH score function
+
+
+def HS(score):
+    with open("HS.txt") as file:
+        hs = int(file.read())  # 0
+        if hs < score:
+            with open("HS.txt", "w") as file:
+                file.write(f"{score}")
+            return score
+        else:
+            return hs
 
 # gameloop
 
@@ -102,6 +126,7 @@ def gameloop():
                     bird.up(20)
                 elif i.mode == "danger":
                     print("Gameover")
+                    gameOver()
                 else:
                     bird.up()
 
@@ -116,18 +141,46 @@ def gameloop():
             # collision
             if i.collide(bird):
                 print("Gameover")
+                gameOver()
 
             # move downward
             if bird.y <= 100:
                 i.y += 5
 
+        # if bird hit ground
+        if bird.y >= HEIGHT-bird.r:
+            print("Gameover")
+            gameOver()
+
         # score
         msg(f"Score:{Filter_score}", 30, 0, 30)
+
+        # For high score
+        msg(f"HS:{HS(Filter_score)}", WIDTH-90, 0, 30)
 
         # update sceen
         clock.tick(FPS)
         pygame.display.update()
 
 
+# =========================Main Condition=====================
+
 if __name__ == "__main__":
-    gameloop()
+    LOOP = True
+    while LOOP:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                LOOP = False
+            pressed = pygame.key.get_pressed()
+
+            if pressed[pygame.K_q]:
+                LOOP = False
+            elif pressed[pygame.K_SPACE]:
+                gameloop()
+
+        scr.fill((0, 0, 0))
+        msg("Press space to play Q for quit", WIDTH/2-80, HEIGHT/2, 15)
+
+        pygame.display.update()
+
+# ===========================THE END==============================
